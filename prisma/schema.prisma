@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type LogginErr {
+  message String
+  stack   String
+  type    String
+}
+
+type LogginReq {
+  headers       LogginReqHeaders
+  id            Int
+  method        String
+  remoteAddress String
+  remotePort    Int
+  url           String
+}
+
+type LogginReqHeaders {
+  accept                         String?
+  accept_encoding                String  @map("accept-encoding")
+  accept_language                String? @map("accept-language")
+  access_control_request_headers String? @map("access-control-request-headers")
+  access_control_request_method  String? @map("access-control-request-method")
+  cache_control                  String? @map("cache-control")
+  connection                     String
+  content_length                 String? @map("content-length")
+  content_type                   String? @map("content-type")
+  host                           String
+  if_modified_since              String? @map("if-modified-since")
+  if_none_match                  String? @map("if-none-match")
+  origin                         String?
+  postman_token                  String? @map("postman-token")
+  pragma                         String?
+  referer                        String?
+  sec_ch_ua                      String? @map("sec-ch-ua")
+  sec_ch_ua_mobile               String? @map("sec-ch-ua-mobile")
+  sec_ch_ua_platform             String? @map("sec-ch-ua-platform")
+  sec_fetch_dest                 String? @map("sec-fetch-dest")
+  sec_fetch_mode                 String? @map("sec-fetch-mode")
+  sec_fetch_site                 String? @map("sec-fetch-site")
+  sec_fetch_user                 String? @map("sec-fetch-user")
+  sec_websocket_extensions       String? @map("sec-websocket-extensions")
+  sec_websocket_key              String? @map("sec-websocket-key")
+  sec_websocket_version          String? @map("sec-websocket-version")
+  upgrade                        String?
+  upgrade_insecure_requests      String? @map("upgrade-insecure-requests")
+  user_agent                     String  @map("user-agent")
+}
+
+type LogginRes {
+  headers    LogginResHeaders
+  statusCode Int?
+}
+
+type LogginResHeaders {
+  accept_ranges    String? @map("accept-ranges")
+  cache_control    String? @map("cache-control")
+  content_encoding String? @map("content-encoding")
+  content_length   Int?    @map("content-length")
+  content_type     String? @map("content-type")
+  etag             String?
+  last_modified    String? @map("last-modified")
+  vary             String?
+  x_powered_by     String? @map("x-powered-by")
+}
+
+model Log {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @db.Date
+  name      String
+}
+
+model loggin {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  err          LogginErr?
+  hostname     String
+  level        Int
+  msg          String
+  pid          Int
+  req          LogginReq
+  res          LogginRes?
+  responseTime Int?
+  time         DateTime   @db.Date
+}
