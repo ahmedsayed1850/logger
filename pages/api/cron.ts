@@ -38,59 +38,64 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const id = mongoose.Types.ObjectId().getTimestamp();
-      getAndSaveLogsMongoandData()
-        .then(async () => {})
-        .catch(async (e) => {
-          console.error(e);
-          await prisma.$disconnect();
-          process.exit(1);
+      const { authorization } = req.headers;
+      if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+        const id = mongoose.Types.ObjectId().getTimestamp();
+        getAndSaveLogsMongoandData()
+          .then(async () => {})
+          .catch(async (e) => {
+            console.error(e);
+            await prisma.$disconnect();
+            process.exit(1);
+          });
+        await prisma.$disconnect();
+        const s3 = new AWS.S3({
+          accessKeyId: process.env.S3_KEY_ID,
+          secretAccessKey: process.env.S3_ACCESS_KEY,
         });
-      await prisma.$disconnect();
-      const s3 = new AWS.S3({
-        accessKeyId: process.env.S3_KEY_ID,
-        secretAccessKey: process.env.S3_ACCESS_KEY,
-      });
-      res.status(200).send("Sucessfully Uploaded");
-      setTimeout(() => {
-        Promise.all(promises).then(function (results) {
-          results.forEach(function (content, idx) {
-            console.log(content, "content");
-            const params = {
-              Bucket: "drainlog",
-              Key: `${buildName[idx]}-${today[0]}-${today[1]}-${today[2]}T00:00:00.txt`,
-              Body: content,
-            };
+        res.status(200).send("Sucessfully Uploaded");
+        setTimeout(() => {
+          Promise.all(promises).then(function (results) {
+            results.forEach(function (content, idx) {
+              console.log(content, "content");
+              const params = {
+                Bucket: "drainlog",
+                Key: `${buildName[idx]}-${today[0]}-${today[1]}-${today[2]}T00:00:00.txt`,
+                Body: content,
+              };
 
-            s3.upload(params, (err, data) => {
-              if (err) {
-                console.error(`${err}`);
-              }
+              s3.upload(params, (err, data) => {
+                if (err) {
+                  console.error(`${err}`);
+                }
+              });
             });
           });
-        });
-      }, 900000);
-      setTimeout(() => {
-        [
-          "build.json",
-          "lambda.json",
-          "external.json",
-          "edge.json",
-          "static.json",
-          "client.json",
-        ].map((_path) => {
-          fs.unlink(_path, (err) => {
-            if (err) throw err;
+        }, 900000);
+        setTimeout(() => {
+          [
+            "build.json",
+            "lambda.json",
+            "external.json",
+            "edge.json",
+            "static.json",
+            "client.json",
+          ].map((_path) => {
+            fs.unlink(_path, (err) => {
+              if (err) throw err;
+            });
           });
-        });
-        prisma.loggin.deleteMany({
-          where: {
-            time: {
-              lte: id,
+          prisma.loggin.deleteMany({
+            where: {
+              time: {
+                lte: id,
+              },
             },
-          },
-        });
-      }, 1800000);
+          });
+        }, 1800000);
+      } else {
+        res.status(401).json({ message: "Authentication Failed" });
+      }
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }

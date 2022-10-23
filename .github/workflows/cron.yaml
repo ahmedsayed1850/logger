@@ -1,0 +1,23 @@
+name: daily-cron
+on:
+  schedule:
+    - cron: "1 * 1 * *"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call API route to migrate data from MongoDB to S3
+        run: |
+          curl --request POST \
+          --url 'https://yoursite.com/api/cron' \
+          --header 'Authorization: Bearer ${{ secrets.API_SECRET_KEY }}'
+
+# ┌────────── minute (0 - 59)
+# │ ┌────────── hour (0 - 23)
+# │ │ ┌────────── day of the month (1 - 31)
+# │ │ │ ┌────────── month (1 - 12)
+# │ │ │ │ ┌────────── day of the week (0 - 6)
+# │ │ │ │ │
+# │ │ │ │ │
+# │ │ │ │ │
+# * * * * *

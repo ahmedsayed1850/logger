@@ -30,9 +30,10 @@ let jsonLog = {
   external: [],
 };
 
+const { DATA_DAYS } = process.env;
 let yesterday = new Date();
 let today = new Date();
-let yesterdayCalc = 24 * 60 * 60 * 1000 * 5; //1 days
+let yesterdayCalc: any = 24 * 60 * 60 * 1000 * Number(DATA_DAYS);
 
 yesterday.setTime(yesterday.getTime() - yesterdayCalc);
 const isoYesterday = yesterday.toISOString();
