@@ -48,7 +48,7 @@ CLIENT_ID=""
 CLIENT_SECRET=""
 REDIRECT_HOST=""
 API_SECRET_KEY="" // FOR Cron jobs
-process.env.DATA_DAYS="" // will pull data by day range EX: "5" will pull data from logger by 5 days only
+DATA_DAYS="" // will pull data by day range EX: "5" will pull data from logger by 5 days only
 ```
 
 ## Logging Client with Pino Logger and send data to MongoDB
