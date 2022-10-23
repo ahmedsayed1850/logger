@@ -180,9 +180,9 @@ jobs:
 
 ## Preview
 ![](https://s1.gifyu.com/images/Image-1de9c0a23451652f0.png)
-![](https://s1.gifyu.com/images/data-dog.jpg)
+![](https://s1.gifyu.com/images/data-dog-logger.jpg)
 ![](https://s1.gifyu.com/images/goo.jpg)
 ![](https://s4.gifyu.com/images/mongodb-example.jpg)
-![](https://s4.gifyu.com/images/s3-aws.jpg)
+![](https://s4.gifyu.com/images/s3-logger.jpg)
 
 
