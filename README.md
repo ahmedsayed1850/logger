@@ -1,4 +1,4 @@
-<h1 align="center">🕵️‍♂️ Customer Drainer Logger</h1>
+<h1 align="center">🕵️‍♂️ Custom Drain Logger</h1>
 <p align="center">
 </p>
 <div>
